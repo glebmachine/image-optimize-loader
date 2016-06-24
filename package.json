@@ -21,12 +21,15 @@
   "dependencies": {
     "async-disk-cache": "1.0.7",
     "crypto": "0.0.3",
+    "gm": "1.22.0",
     "imagemin": "5.2.1",
     "imagemin-mozjpeg": "6.0.0",
     "imagemin-pngquant": "5.0.0",
     "imagemin-svgo": "5.1.0",
     "loader-utils": "0.2.15",
-    "q": "1.4.1"
+    "pngjs": "2.3.1",
+    "q": "1.4.1",
+    "streamifier": "0.1.1"
   },
   "devDependencies": {
     "eslint": "2.13.1",
@@ -47,8 +50,8 @@
       "no-var": 1,
       "global-require": 0,
       "func-names": 0,
-      "prefer-rest-params":1,
-      "strict":1,
+      "prefer-rest-params": 1,
+      "strict": 1,
       "no-param-reassign": 0
     }
   }
