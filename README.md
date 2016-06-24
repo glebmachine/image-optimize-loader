@@ -1,7 +1,13 @@
 # image-optimize-loader
-
-Optimize images with global caching and non-transparent png to jpg conversion (on the go)
+Optimize images with global caching and covertion of non-transparent png to jpg (on the fly)
 > Rework of https://github.com/tcoopman/image-webpack-loader
+
+## Features
+ - Opmitize images with `pngquant`/`mozjpeg`/`svgo` (like image-webpack-loader)
+ - Cache results into your OS `tmp` folder 
+
+## Webpack 2.0 features
+ - Convert non-transparent `png` images into `jpg` (due up to 7x size reduction)
 
 ## Install
 
@@ -10,8 +16,7 @@ $ npm install image-optimize-loader --save-dev
 ```
 
 ## Usage
-
-```javascript
+```js
 loaders: [
     {
         test: /\.(jpe?g|png|gif|svg)$/i,
@@ -22,9 +27,9 @@ loaders: [
     }
 ]
 ```
-## Configuration
 
-```
+## Configuration
+```js
 { // default configuration example
   imageOptimizeLoader: {
     optimizer: {
@@ -46,12 +51,5 @@ loaders: [
     }
 }
 ```
-
-Comes bundled with the following optimizers:
-- [mozjpeg](https://github.com/imagemin/imagemin-mozjpeg) — *Compress JPEG images*
-- [svgo](https://github.com/kevva/imagemin-svgo) — *Compress SVG images*
-- [pngquant](https://github.com/imagemin/imagemin-pngquant) — *Compress PNG images*
-
 ## License
-
 MIT (http://www.opensource.org/licenses/mit-license.php)
