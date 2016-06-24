@@ -28,6 +28,9 @@ function debug() {
 }
 
 const defaultSettings = {
+  optimizer: {
+    covertPngToJpg:true
+  },
   pngquant: {
     quality: '65-80',
     speed: 4
@@ -55,13 +58,12 @@ module.exports = function (content) {
 
   // extend default configs
   const settings = {};
-
-  settings.mozjpeg = Object.assign({}, defaultSettings.mozjpeg, config.mozjpeg || {});
-  settings.pngquant = Object.assign({}, defaultSettings.pngquant, config.pngquant || {});
-  settings.svgo = Object.assign({}, defaultSettings.svgo, config.svgo || {});
+  settings.optimizer = Object.assign({}, defaultSettings.optimizer, config.optimizer || {});
+  settings.mozjpeg = Object.assign({}, settings.optimizer, defaultSettings.mozjpeg, config.mozjpeg || {});
+  settings.pngquant = Object.assign({}, settings.optimizer, defaultSettings.pngquant, config.pngquant || {});
+  settings.svgo = Object.assign({}, settings.optimizer, defaultSettings.svgo, config.svgo || {});
 
   // add settings to cacheKey by extension
-  console.log(fileExt);
   switch(fileExt) {
     case 'png':
       cacheKey = getHashOf(JSON.stringify([cacheKey, settings.pngquant]));
@@ -88,7 +90,6 @@ module.exports = function (content) {
       cache.has(cacheKey),
       cache.has(`${cacheKey}-checksum`),
     ]).then(checks => {
-      return promisePrepareImage.resolve();
         // if cache is not found
       if (!checks[0] || !checks[1]) {
         debug('> cache not found, optimize');
@@ -120,34 +121,20 @@ module.exports = function (content) {
       streamifier.createReadStream(content)
         .pipe(new PNG())
         .on('metadata', data => {
-          // if alpha not found - convert buffer to jpg
-          if (!data.alpha) {
-            debug('Alpha not found!');
-            // var request = this._compilation._modules[this.request];
-            // delete this._compilation._modules[this.request];
-
-            // request.request = request.request.replace(/.png$/,'.jpg');
-            // request.resource = request.resource.replace(/.png$/,'.jpg');
-            // request.userRequest = request.userRequest.replace(/.png$/,'.jpg');
-            // request.rawRequest = request.rawRequest.replace(/.png$/,'.jpg');
-            this.resource = this.resource.replace(/.png$/,'.jpg');
-            console.log(this.resourcePath);
-            // console.log(this.resourcePath);
-
-
-            // this._compilation._modules[this.request] = request;
-
-            gm(content).toBuffer('JPG', (err, buffer) => {
-              if (err) {
-                return callback(err);
-              }
-
-              content = buffer;
-              promiseOptimizeImage.resolve();
-            });
-          } else {
-            promiseOptimizeImage.resolve();
+          if (!settings.optimizer.covertPngToJpg || data.alpha) {
+            return promiseOptimizeImage.resolve();
           }
+
+          // if alpha not found - convert buffer to jpg
+          this.resource = this.resource.replace(/.png$/,'.jpg');
+          gm(content).toBuffer('JPG', (err, buffer) => {
+            if (err) {
+              return callback(err);
+            }
+
+            content = buffer;
+            promiseOptimizeImage.resolve();
+          });
         });
     } else {
       promiseOptimizeImage.resolve();
