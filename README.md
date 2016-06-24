@@ -1,5 +1,5 @@
 # image-optimize-loader
-Optimize images with global caching and covertion of non-transparent png to jpg (on the fly)
+Optimize images with global caching and convert of non-transparent png to jpg (on the fly)
 > Rework of https://github.com/tcoopman/image-webpack-loader
 
 ## Features
