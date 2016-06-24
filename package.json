@@ -29,7 +29,8 @@
     "loader-utils": "0.2.15",
     "pngjs": "2.3.1",
     "q": "1.4.1",
-    "streamifier": "0.1.1"
+    "streamifier": "0.1.1",
+    "webpack": "git://github.com/webpack/webpack.git#1cd6c4eeba040a4aae4058f512ef21306411cc18"
   },
   "devDependencies": {
     "eslint": "2.13.1",

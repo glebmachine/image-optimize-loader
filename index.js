@@ -48,6 +48,7 @@ const defaultSettings = {
 };
 
 module.exports = function (content) {
+  const isWebpack2 = !!this.remainingRequest;
   const callback = this.async();
   const config = loaderUtils.getLoaderConfig(this, 'imageOptimizeLoader') || {};
 
@@ -66,7 +67,7 @@ module.exports = function (content) {
   // add settings to cacheKey by extension
   switch(fileExt) {
     case 'png':
-      cacheKey = getHashOf(JSON.stringify([cacheKey, settings.pngquant]));
+      cacheKey = getHashOf(JSON.stringify([cacheKey, settings.pngquant, isWebpack2]));
       break;
     case 'jpg':
       cacheKey = getHashOf(JSON.stringify([cacheKey, settings.mozjpeg]));
@@ -90,7 +91,9 @@ module.exports = function (content) {
       cache.has(cacheKey),
       cache.has(`${cacheKey}-checksum`),
     ]).then(checks => {
-        // if cache is not found
+      promisePrepareImage.resolve();
+
+      // if cache is not found
       if (!checks[0] || !checks[1]) {
         debug('> cache not found, optimize');
         promisePrepareImage.resolve();
@@ -117,11 +120,11 @@ module.exports = function (content) {
   });
 
   promisePrepareImage.promise.then(() => {
-    if (fileExt === 'png') {
+    if (settings.optimizer.covertPngToJpg && fileExt === 'png' && isWebpack2) {
       streamifier.createReadStream(content)
         .pipe(new PNG())
         .on('metadata', data => {
-          if (!settings.optimizer.covertPngToJpg || data.alpha) {
+          if (data.alpha) {
             return promiseOptimizeImage.resolve();
           }
 
