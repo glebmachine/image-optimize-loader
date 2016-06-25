@@ -29,22 +29,22 @@ function debug() {
 
 const defaultSettings = {
   optimizer: {
-    covertPngToJpg:true
+    covertPngToJpg: true,
   },
   pngquant: {
     quality: '65-80',
-    speed: 4
+    speed: 4,
   },
-  mozjpeg:{
+  mozjpeg: {
     targa: false,
   },
   svgo: {
-    plugins:[
+    plugins: [
       { removeComments: true },
       { sortAttrs: true },
       { minifyStyles: true },
-    ]
-  }
+    ],
+  },
 };
 
 module.exports = function (content) {
@@ -59,13 +59,28 @@ module.exports = function (content) {
 
   // extend default configs
   const settings = {};
-  settings.optimizer = Object.assign({}, defaultSettings.optimizer, config.optimizer || {});
-  settings.mozjpeg = Object.assign({}, settings.optimizer, defaultSettings.mozjpeg, config.mozjpeg || {});
-  settings.pngquant = Object.assign({}, settings.optimizer, defaultSettings.pngquant, config.pngquant || {});
-  settings.svgo = Object.assign({}, settings.optimizer, defaultSettings.svgo, config.svgo || {});
+
+  settings.optimizer = Object.assign({},
+    defaultSettings.optimizer,
+    config.optimizer || {});
+
+  settings.mozjpeg = Object.assign({},
+    settings.optimizer,
+    defaultSettings.mozjpeg,
+    config.mozjpeg || {});
+
+  settings.pngquant = Object.assign({},
+    settings.optimizer,
+    defaultSettings.pngquant,
+    config.pngquant || {});
+
+  settings.svgo = Object.assign({},
+    settings.optimizer,
+    defaultSettings.svgo,
+    config.svgo || {});
 
   // add settings to cacheKey by extension
-  switch(fileExt) {
+  switch (fileExt) {
     case 'png':
       cacheKey = getHashOf(JSON.stringify([cacheKey, settings.pngquant, isWebpack2]));
       break;
@@ -129,7 +144,7 @@ module.exports = function (content) {
           }
 
           // if alpha not found - convert buffer to jpg
-          this.resource = this.resource.replace(/.png$/,'.jpg');
+          this.resource = this.resource.replace(/.png$/, '.jpg');
           gm(content).toBuffer('JPG', (err, buffer) => {
             if (err) {
               return callback(err);
@@ -137,7 +152,11 @@ module.exports = function (content) {
 
             content = buffer;
             promiseOptimizeImage.resolve();
+
+            return false;
           });
+
+          return false;
         });
     } else {
       promiseOptimizeImage.resolve();
