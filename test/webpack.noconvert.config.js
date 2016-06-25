@@ -7,8 +7,8 @@ module.exports = [
     name: 'browser',
     entry: './app.js',
     output: {
-      path: path.join(__dirname, 'public/assets'),
-      publicPath: 'assets/',
+      path: path.join(__dirname, 'results/noconvert'),
+      publicPath: '/',
       filename: 'app.js'
     },
     resolve: {
@@ -25,5 +25,10 @@ module.exports = [
         },
       ],
     },
+    imageOptimizeLoader: {
+      optimizer: {
+        covertPngToJpg:false,
+      },
+    }
   },
 ];

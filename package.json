@@ -5,8 +5,13 @@
   "author": "Gleb Mikhee @glebmachine",
   "scripts": {
     "lint": "eslint --fix index.js",
-    "lint-watch": "esw --fix --watch index.js",
-    "test-webpack": "cd test; webpack"
+    "lintwatch": "esw --fix --watch index.js",
+    "test": "npm run test-webpack; npm run test-unit; rm -rf test/results",
+    "test-webpack": "npm run test-webpack:default; npm run test-webpack:noconvert",
+    "test-webpack:default": "cd test; webpack --config webpack.default.config.js",
+    "test-webpack:noconvert": "cd test; webpack --config webpack.noconvert.config.js",
+    "test-unit": "cd test; mocha test.js",
+    "test-unit:dot": "cd test; mocha test.js --reporter dot"
   },
   "licenses": [
     {
@@ -29,15 +34,17 @@
     "loader-utils": "0.2.15",
     "pngjs": "2.3.1",
     "q": "1.4.1",
-    "streamifier": "0.1.1",
-    "webpack": "git://github.com/webpack/webpack.git#1cd6c4eeba040a4aae4058f512ef21306411cc18"
+    "streamifier": "0.1.1"
   },
   "devDependencies": {
+    "chai": "3.5.0",
     "eslint": "2.13.1",
     "eslint-config-airbnb": "9.0.1",
     "eslint-plugin-import": "1.9.2",
     "eslint-watch": "2.1.11",
     "file-loader": "0.9.0",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.1.0",
     "webpack": "git://github.com/webpack/webpack.git#6748dca837b6402f056b6ac94ffc3c99f8a25c36"
   },
   "eslintConfig": {

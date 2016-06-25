@@ -1,6 +1,7 @@
 node_modules
 dist
 npm-debug.log
-test/public
+test/results
+test/expectation
 .cache
 .DS_Store
