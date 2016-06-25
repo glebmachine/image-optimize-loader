@@ -1,4 +1,6 @@
-# image-optimize-loader
+# image-optimize-loader [![Build Status][ci-img]][ci]
+[ci-img]:  https://travis-ci.org/glebmachine/image-optimize-loader.svg
+[ci]:      https://travis-ci.org/glebmachine/image-optimize-loader
 Optimize images with global caching and convert of non-transparent png to jpg (on the fly)
 > Rework of https://github.com/tcoopman/image-webpack-loader
 
