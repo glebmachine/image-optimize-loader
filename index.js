@@ -81,17 +81,17 @@ module.exports = function (content) {
 
   // add settings to cacheKey by extension
   switch (fileExt) {
-    case 'png':
-      cacheKey = getHashOf(JSON.stringify([cacheKey, settings.pngquant, isWebpack2]));
-      break;
-    case 'jpg':
-      cacheKey = getHashOf(JSON.stringify([cacheKey, settings.mozjpeg]));
-      break;
-    case 'svg':
-      cacheKey = getHashOf(JSON.stringify([cacheKey, settings.svgo]));
-      break;
-    default:
-      break;
+  case 'png':
+    cacheKey = getHashOf(JSON.stringify([cacheKey, settings.pngquant, isWebpack2]));
+    break;
+  case 'jpg':
+    cacheKey = getHashOf(JSON.stringify([cacheKey, settings.mozjpeg]));
+    break;
+  case 'svg':
+    cacheKey = getHashOf(JSON.stringify([cacheKey, settings.svgo]));
+    break;
+  default:
+    break;
   }
 
   const promiseOptimizeImage = Q.defer();
