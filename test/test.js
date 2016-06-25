@@ -46,4 +46,16 @@ describe('image-optimize-loader tests', () => {
       assert.equal(currentFile, expectedFile, 'new file are equal to reference');
     });
   });
+
+  describe('PNG to JPG conversion', () => {
+    it('assert file exists', () => {
+      assert.isFile('./results/default/test-noalpha.jpg');
+      assert.isFile('./results/noconvert/test-noalpha.png');
+    });
+    it('assert converted jpg equal to referenced', () => {
+      const currentFile = fs.readFileSync('./results/default/test-noalpha.jpg').toString();
+      const expectedFile = fs.readFileSync('./expectation/test-noalpha.jpg').toString();
+      assert.equal(currentFile, expectedFile, 'new file are equal to reference');
+    });
+  });
 });
