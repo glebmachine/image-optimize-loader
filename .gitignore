@@ -1,7 +1,5 @@
 node_modules
-dist
 npm-debug.log
 test/results
-test/expectation
 .cache
 .DS_Store
