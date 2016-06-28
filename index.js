@@ -21,12 +21,6 @@ function getHashOf(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
 
-function debug() {
-  const args = Array.prototype.slice.call(arguments);
-  args.unshift('debug');
-  console.log.apply(console, args);
-}
-
 const defaultSettings = {
   optimizer: {
     covertPngToJpg: true,
@@ -98,8 +92,6 @@ module.exports = function (content) {
   const promisePrepareImage = Q.defer();
   const promiseCacheExists = Q.defer();
 
-  debug('file: ', fileName);
-
   // ensure cache exists
   promiseCacheExists.promise.then(() => {
     Q.all([
@@ -110,7 +102,6 @@ module.exports = function (content) {
 
       // if cache is not found
       if (!checks[0] || !checks[1]) {
-        debug('> cache not found, optimize');
         promisePrepareImage.resolve();
         return;
       }
@@ -121,13 +112,11 @@ module.exports = function (content) {
         if (results.value === fileHash) {
           cache.get(cacheKey).then(cacheEntry => {
             promisePrepareImage.reject();
-            debug('> from cache');
             return callback(null, cacheEntry.value);
           }).catch(callback);
 
           // cache is outdated, create new image
         } else {
-          debug('> cache outdated');
           promisePrepareImage.resolve();
         }
       });
@@ -164,8 +153,6 @@ module.exports = function (content) {
   });
 
   promiseOptimizeImage.promise.then(() => {
-    debug('optimization started');
-
     imagemin.buffer(content, {
       plugins: [
         imageminMozjpeg(settings.mozjpeg),
@@ -173,7 +160,6 @@ module.exports = function (content) {
         imageminSvgo(settings.svgo),
       ],
     }).then(file => {
-      debug('optimization completed');
       cache.set(cacheKey, file);
       cache.set(`${cacheKey}-checksum`, fileHash);
       callback(null, file);
