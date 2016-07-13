@@ -48,5 +48,6 @@
     "istanbul": "0.4.4",
     "mocha": "2.5.3",
     "webpack": "git://github.com/webpack/webpack.git#6748dca837b6402f056b6ac94ffc3c99f8a25c36"
-  }
+  },
+  "versionify": "0.1.1"
 }

@@ -16,6 +16,12 @@ const streamifier = require('streamifier');
 
 const Cache = require('async-disk-cache');
 const cache = new Cache('image-optimize-loader', { supportBuffer: true });
+const TaskQueue = require('task-queue-async');
+const asyncQueue = new TaskQueue({
+  sleepBetweenTasks: 1,
+  concurrency: 4,
+});
+// const concurrency = 0;
 
 function getHashOf(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -90,57 +96,71 @@ module.exports = function (content) {
 
   const promiseOptimizeImage = Q.defer();
   const promisePrepareImage = Q.defer();
-  const promiseCacheExists = Q.defer();
+  const checkCacheExists = Q.defer();
+
+
+  function startOptimization() {
+    asyncQueue.addTask(function () {
+      // concurrency++;
+      // console.log(`\r optimize:start ${concurrency}`);
+
+      const completePromise = Q.defer();
+      promisePrepareImage.resolve(completePromise);
+      completePromise.promise.then(this.wrapCallback(() => {
+        // concurrency--;
+        // console.log(`\r optimize:finished ${concurrency}`);
+      }));
+    });
+  }
 
   // ensure cache exists
-  promiseCacheExists.promise.then(() => {
+  checkCacheExists.promise.then(() => {
     Q.all([
       cache.has(cacheKey),
       cache.has(`${cacheKey}-checksum`),
     ]).then(checks => {
-      promisePrepareImage.resolve();
-
       // if cache is not found
       if (!checks[0] || !checks[1]) {
-        promisePrepareImage.resolve();
+        startOptimization();
         return;
       }
 
-        // check is cache up to date
+      // check is cache up to date
       cache.get(`${cacheKey}-checksum`).then(results => {
           // if file not changed, return cached value
-        if (results.value === fileHash) {
+        if (results.value.fileHash === fileHash) {
           cache.get(cacheKey).then(cacheEntry => {
+            this.resource = results.value.fileHash;
             promisePrepareImage.reject();
             return callback(null, cacheEntry.value);
           }).catch(callback);
 
           // cache is outdated, create new image
         } else {
-          promisePrepareImage.resolve();
+          startOptimization();
         }
       });
     }).catch(callback);
   });
 
-  promisePrepareImage.promise.then(() => {
+  promisePrepareImage.promise.then((completePromise) => {
     if (settings.optimizer.covertPngToJpg && fileExt === 'png' && isWebpack2) {
       streamifier.createReadStream(content)
         .pipe(new PNG())
         .on('metadata', data => {
           if (data.alpha) {
-            return promiseOptimizeImage.resolve();
+            return promiseOptimizeImage.resolve(completePromise);
           }
 
           // if alpha not found - convert buffer to jpg
-          this.resource = this.resource.replace(/.png$/, '.jpg');
           gm(content).toBuffer('JPG', (err, buffer) => {
             if (err) {
               return callback(err);
             }
 
+            this.resource = this.resource.replace(/.png$/, '.jpg');
             content = buffer;
-            promiseOptimizeImage.resolve();
+            promiseOptimizeImage.resolve(completePromise);
 
             return false;
           });
@@ -148,11 +168,11 @@ module.exports = function (content) {
           return false;
         });
     } else {
-      promiseOptimizeImage.resolve();
+      promiseOptimizeImage.resolve(completePromise);
     }
   });
 
-  promiseOptimizeImage.promise.then(() => {
+  promiseOptimizeImage.promise.then((completePromise) => {
     imagemin.buffer(content, {
       plugins: [
         imageminMozjpeg(settings.mozjpeg),
@@ -161,12 +181,17 @@ module.exports = function (content) {
       ],
     }).then(file => {
       cache.set(cacheKey, file);
-      cache.set(`${cacheKey}-checksum`, fileHash);
+      cache.set(`${cacheKey}-checksum`, {
+        fileHash,
+        resource: this.resource,
+      });
+
+      completePromise.resolve();
       callback(null, file);
     }).catch(callback);
   }).catch(callback);
 
-  promiseCacheExists.resolve();
+  checkCacheExists.resolve();
 };
 
 module.exports.raw = true;
