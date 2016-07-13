@@ -1,6 +1,6 @@
 'use strict';
 
-var path = require('path');
+const path = require('path');
 
 module.exports = [
   {
@@ -9,10 +9,10 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'results/default'),
       publicPath: '/',
-      filename: 'app.js'
+      filename: 'app.js',
     },
     resolve: {
-      extensions: ['', '.js']
+      extensions: ['', '.js'],
     },
     module: {
       loaders: [

@@ -1,4 +1,5 @@
 'use strict';
+const pjson = require('./package.json');
 
 const imagemin = require('imagemin');
 const imageminMozjpeg = require('imagemin-mozjpeg');
@@ -15,13 +16,13 @@ const gm = require('gm');
 const streamifier = require('streamifier');
 
 const Cache = require('async-disk-cache');
-const cache = new Cache('image-optimize-loader', { supportBuffer: true });
+const cache = new Cache(`image-optimize-loader-${pjson.version}`, { supportBuffer: true });
 const TaskQueue = require('task-queue-async');
 const asyncQueue = new TaskQueue({
   sleepBetweenTasks: 1,
   concurrency: 4,
 });
-// const concurrency = 0;
+// let concurrency = 0;
 
 function getHashOf(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -127,10 +128,12 @@ module.exports = function (content) {
 
       // check is cache up to date
       cache.get(`${cacheKey}-checksum`).then(results => {
+        const data = JSON.parse(results.value);
+
           // if file not changed, return cached value
-        if (results.value.fileHash === fileHash) {
+        if (data.fileHash === fileHash) {
           cache.get(cacheKey).then(cacheEntry => {
-            this.resource = results.value.fileHash;
+            this.resource = data.resource;
             promisePrepareImage.reject();
             return callback(null, cacheEntry.value);
           }).catch(callback);
@@ -181,10 +184,10 @@ module.exports = function (content) {
       ],
     }).then(file => {
       cache.set(cacheKey, file);
-      cache.set(`${cacheKey}-checksum`, {
+      cache.set(`${cacheKey}-checksum`, JSON.stringify({
         fileHash,
         resource: this.resource,
-      });
+      }));
 
       completePromise.resolve();
       callback(null, file);
