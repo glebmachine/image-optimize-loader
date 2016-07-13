@@ -1,6 +1,6 @@
 {
   "name": "image-optimize-loader",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Optimize images with global caching and convert of non-transparent png to jpg (on the fly) — ",
   "author": "Gleb Mikhee @glebmachine",
   "scripts": {
