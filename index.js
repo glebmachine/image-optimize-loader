@@ -110,15 +110,16 @@ module.exports = function (content) {
       completePromise.promise.then(this.wrapCallback(() => {
         // concurrency--;
         // console.log(`\r optimize:finished ${concurrency}`);
-      }));
+      }))
+      .catch(callback);
     });
   }
 
   // ensure cache exists
   checkCacheExists.promise.then(() => {
     Q.all([
-      cache.has(cacheKey),
-      cache.has(`${cacheKey}-checksum`),
+      cache.has(cacheKey).catch(callback),
+      cache.has(`${cacheKey}-checksum`).catch(callback),
     ]).then(checks => {
       // if cache is not found
       if (!checks[0] || !checks[1]) {
@@ -142,9 +143,9 @@ module.exports = function (content) {
         } else {
           startOptimization();
         }
-      });
+      }).catch(callback);
     }).catch(callback);
-  });
+  }).catch(callback);
 
   promisePrepareImage.promise.then((completePromise) => {
     if (settings.optimizer.covertPngToJpg && fileExt === 'png' && isWebpack2) {
@@ -173,7 +174,7 @@ module.exports = function (content) {
     } else {
       promiseOptimizeImage.resolve(completePromise);
     }
-  });
+  }).catch(callback);
 
   promiseOptimizeImage.promise.then((completePromise) => {
     imagemin.buffer(content, {
