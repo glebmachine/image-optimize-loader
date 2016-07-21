@@ -25,7 +25,7 @@
     "url": "git@github.com:tcoopman/image-webpack-loader.git"
   },
   "dependencies": {
-    "async-disk-cache": "1.0.7",
+    "async-disk-cache": "1.0.8",
     "crypto": "0.0.3",
     "gm": "1.22.0",
     "imagemin": "5.2.1",
@@ -33,7 +33,7 @@
     "imagemin-pngquant": "5.0.0",
     "imagemin-svgo": "5.1.0",
     "loader-utils": "0.2.15",
-    "task-queue-async":"1.0.1",
+    "task-queue-async": "1.0.1",
     "pngjs": "2.3.1",
     "q": "1.4.1",
     "streamifier": "0.1.1"
