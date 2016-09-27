@@ -48,7 +48,7 @@
     "file-loader": "0.9.0",
     "git-hooks": "1.0.2",
     "istanbul": "0.4.4",
-    "mocha": "2.5.3",
+    "mocha": "3.1.0",
     "webpack": "git://github.com/webpack/webpack.git#6748dca837b6402f056b6ac94ffc3c99f8a25c36"
   },
   "versionify": "0.1.2"
