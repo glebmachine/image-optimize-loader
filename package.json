@@ -1,6 +1,6 @@
 {
   "name": "image-optimize-loader",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Optimize images with global caching and convert of non-transparent png to jpg (on the fly) — ",
   "author": "Gleb Mikhee @glebmachine",
   "scripts": {
@@ -51,5 +51,5 @@
     "mocha": "2.5.3",
     "webpack": "git://github.com/webpack/webpack.git#6748dca837b6402f056b6ac94ffc3c99f8a25c36"
   },
-  "versionify": "0.1.4"
+  "versionify": "0.1.5"
 }

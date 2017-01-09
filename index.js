@@ -33,7 +33,7 @@ const defaultSettings = {
     covertPngToJpg: true,
   },
   pngquant: {
-    quality: '65-80',
+    quality: '0-80',
     speed: 4,
   },
   mozjpeg: {
