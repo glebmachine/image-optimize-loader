@@ -1,6 +1,6 @@
 {
   "name": "image-optimize-loader",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Optimize images with global caching and convert of non-transparent png to jpg (on the fly) — ",
   "author": "Gleb Mikhee @glebmachine",
   "scripts": {
@@ -30,10 +30,10 @@
     "gm": "1.22.0",
     "imagemin": "5.2.1",
     "imagemin-mozjpeg": "6.0.0",
-    "imagemin-pngquant": "5.0.0",
+    "imagemin-pngquant": "glebmachine/imagemin-pngquant",
     "imagemin-svgo": "5.1.0",
     "loader-utils": "0.2.15",
-    "task-queue-async":"1.0.1",
+    "task-queue-async": "1.0.1",
     "pngjs": "2.3.1",
     "q": "1.4.1",
     "streamifier": "0.1.1"
@@ -51,5 +51,5 @@
     "mocha": "2.5.3",
     "webpack": "git://github.com/webpack/webpack.git#6748dca837b6402f056b6ac94ffc3c99f8a25c36"
   },
-  "versionify": "0.1.2"
+  "versionify": "0.1.4"
 }
