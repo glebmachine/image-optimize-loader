@@ -31,7 +31,7 @@
     "imagemin": "5.2.1",
     "imagemin-mozjpeg": "6.0.0",
     "imagemin-pngquant": "glebmachine/imagemin-pngquant",
-    "imagemin-svgo": "5.1.0",
+    "imagemin-svgo": "5.2.1",
     "loader-utils": "0.2.15",
     "task-queue-async": "1.0.1",
     "pngjs": "2.3.1",
