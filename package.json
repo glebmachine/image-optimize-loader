@@ -28,7 +28,7 @@
     "async-disk-cache": "1.0.7",
     "crypto": "0.0.3",
     "gm": "1.22.0",
-    "imagemin": "5.2.1",
+    "imagemin": "5.3.1",
     "imagemin-mozjpeg": "6.0.0",
     "imagemin-pngquant": "glebmachine/imagemin-pngquant",
     "imagemin-svgo": "5.1.0",
